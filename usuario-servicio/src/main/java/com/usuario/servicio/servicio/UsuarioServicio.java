@@ -29,25 +29,21 @@ public class UsuarioServicio {
     private MotoFeignCliente motoFeignCliente;
 
     public List<Carro> getCarros(int usuarioId){
-        List<Carro> carros = restTemplate.getForObject("http://localhost:8002/carro/usuario/" + usuarioId, List.class);
-        return carros;
+        return restTemplate.getForObject("http://localhost:8002/carro/usuario/" + usuarioId, List.class);
     }
 
     public List<Moto> getMotos(int usuarioId){
-        List<Moto> motos = restTemplate.getForObject("http://localhost:8003/moto/usuario/" + usuarioId, List.class);
-        return motos;
+        return restTemplate.getForObject("http://localhost:8003/moto/usuario/" + usuarioId, List.class);
     }
 
     public Carro saveCarro(int usuarioId,Carro carro){
         carro.setUsuarioId(usuarioId);
-        Carro nuevoCarro = carroFeignCliente.save(carro);
-        return nuevoCarro;
+        return carroFeignCliente.save(carro);
     }
 
     public Moto saveMoto(int usuarioId,Moto moto){
         moto.setUsuarioId(usuarioId);
-        Moto nuevoMoto = motoFeignCliente.save(moto);
-        return nuevoMoto;
+       return motoFeignCliente.save(moto);
     }
 
     public Map<String, Object> getUsuarioAndVehiculos(int usuarioId){
@@ -58,15 +54,17 @@ public class UsuarioServicio {
             resultado.put("mensaje","El usuario no existe");
             return resultado;
         }
+
         resultado.put("Usuario",usuario);
         List<Carro> carros = carroFeignCliente.getCarros(usuarioId);
-        if (carros.isEmpty()){
+        if(carros == null){
             resultado.put("Carros","El usuario no tiene carros");
         }else {
             resultado.put("Carros", carros);
         }
+
         List<Moto> motos = motoFeignCliente.getMotos(usuarioId);
-        if (motos.isEmpty()){
+        if (motos == null){
             resultado.put("Motos","El usuario no tiene motos");
         }else {
             resultado.put("Motos", motos);
@@ -83,7 +81,6 @@ public class UsuarioServicio {
     }
 
     public Usuario save(Usuario usuario){
-        Usuario nuevoUsuario = usuarioRepository.save(usuario);
-        return nuevoUsuario;
+        return usuarioRepository.save(usuario);
     }
 }
